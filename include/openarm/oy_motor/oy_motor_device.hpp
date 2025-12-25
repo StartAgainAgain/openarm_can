@@ -16,8 +16,8 @@
 
 #include "../canbus/can_device.hpp"
 #include "../canbus/can_socket.hpp"
-#include "dm_motor.hpp"
-#include "dm_motor_control.hpp"
+#include "oy_motor.hpp"
+#include "oy_motor_control.hpp"
 
 namespace openarm::oy_motor {
 enum CallbackMode {

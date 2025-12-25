@@ -39,7 +39,11 @@ add_library(
   src/openarm/damiao_motor/dm_motor.cpp
   src/openarm/damiao_motor/dm_motor_control.cpp
   src/openarm/damiao_motor/dm_motor_device.cpp
-  src/openarm/damiao_motor/dm_motor_device_collection.cpp)
+  src/openarm/damiao_motor/dm_motor_device_collection.cpp
+  src/openarm/oy_motor/oy_motor.cpp
+  src/openarm/oy_motor/oy_motor_control.cpp
+  src/openarm/oy_motor/oy_motor_device.cpp
+  src/openarm/oy_motor/oy_motor_device_collection.cpp)
 set_target_properties(
   openarm_can
   PROPERTIES POSITION_INDEPENDENT_CODE ON
@@ -65,7 +69,12 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.23)
            include/openarm/damiao_motor/dm_motor_constants.hpp
            include/openarm/damiao_motor/dm_motor_control.hpp
            include/openarm/damiao_motor/dm_motor_device.hpp
-           include/openarm/damiao_motor/dm_motor_device_collection.hpp)
+           include/openarm/damiao_motor/dm_motor_device_collection.hpp
+           include/openarm/oy_motor/oy_motor.hpp
+           include/openarm/oy_motor/oy_motor_constants.hpp
+           include/openarm/oy_motor/oy_motor_control.hpp
+           include/openarm/oy_motor/oy_motor_device.hpp
+           include/openarm/oy_motor/oy_motor_device_collection.hpp)
   install(
     TARGETS openarm_can
     EXPORT openarm_can_export

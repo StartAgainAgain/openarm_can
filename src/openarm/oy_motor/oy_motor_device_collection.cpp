@@ -77,9 +77,10 @@ void DMDeviceCollection::set_callback_mode_all(CallbackMode callback_mode) {
 }
 
 void DMDeviceCollection::query_param_one(int i, int RID) {
+    auto dm_device = get_dm_devices().at(i);
     CANPacket param_query =
-        CanPacketEncoder::create_query_param_command(get_dm_devices()[i]->get_motor(), RID);
-    send_command_to_device(get_dm_devices()[i], param_query);
+        CanPacketEncoder::create_query_param_command(dm_device->get_motor(), RID);
+    send_command_to_device(dm_device, param_query);
 }
 
 void DMDeviceCollection::query_param_all(int RID) {
@@ -122,6 +123,127 @@ void DMDeviceCollection::posvel_control_one(int i, const PosVelParam& posvel_par
 void DMDeviceCollection::posvel_control_all(const std::vector<PosVelParam>& posvel_params) {
     for (size_t i = 0; i < posvel_params.size(); i++) {
         posvel_control_one(i, posvel_params[i]);
+    }
+}
+
+void DMDeviceCollection::clear_fault_one(int i) {
+    auto dm_device = get_dm_devices().at(i);
+    CANPacket cmd = CanPacketEncoder::create_clear_fault_command(dm_device->get_motor());
+    send_command_to_device(dm_device, cmd);
+}
+
+void DMDeviceCollection::clear_fault_all() {
+    for (auto dm_device : get_dm_devices()) {
+        CANPacket cmd = CanPacketEncoder::create_clear_fault_command(dm_device->get_motor());
+        send_command_to_device(dm_device, cmd);
+    }
+}
+
+void DMDeviceCollection::brake_one(int i, uint8_t op) {
+    auto dm_device = get_dm_devices().at(i);
+    CANPacket cmd = CanPacketEncoder::create_brake_command(dm_device->get_motor(), op);
+    send_command_to_device(dm_device, cmd);
+}
+
+void DMDeviceCollection::brake_all(uint8_t op) {
+    for (auto dm_device : get_dm_devices()) {
+        CANPacket cmd = CanPacketEncoder::create_brake_command(dm_device->get_motor(), op);
+        send_command_to_device(dm_device, cmd);
+    }
+}
+
+void DMDeviceCollection::iq_control_one(int i, double iq_current_a) {
+    auto dm_device = get_dm_devices().at(i);
+    CANPacket cmd = CanPacketEncoder::create_iq_control_command(dm_device->get_motor(), iq_current_a);
+    send_command_to_device(dm_device, cmd);
+}
+
+void DMDeviceCollection::iq_control_all(const std::vector<double>& iq_currents_a) {
+    for (size_t i = 0; i < iq_currents_a.size(); i++) {
+        iq_control_one(static_cast<int>(i), iq_currents_a[i]);
+    }
+}
+
+void DMDeviceCollection::speed_control_one(int i, double speed_rpm) {
+    auto dm_device = get_dm_devices().at(i);
+    CANPacket cmd = CanPacketEncoder::create_speed_control_command(dm_device->get_motor(), speed_rpm);
+    send_command_to_device(dm_device, cmd);
+}
+
+void DMDeviceCollection::speed_control_all(const std::vector<double>& speeds_rpm) {
+    for (size_t i = 0; i < speeds_rpm.size(); i++) {
+        speed_control_one(static_cast<int>(i), speeds_rpm[i]);
+    }
+}
+
+void DMDeviceCollection::abs_pos_control_one_rad(int i, double position_rad) {
+    auto dm_device = get_dm_devices().at(i);
+    CANPacket cmd =
+        CanPacketEncoder::create_abs_pos_control_command_rad(dm_device->get_motor(), position_rad);
+    send_command_to_device(dm_device, cmd);
+}
+
+void DMDeviceCollection::abs_pos_control_all_rad(const std::vector<double>& positions_rad) {
+    for (size_t i = 0; i < positions_rad.size(); i++) {
+        abs_pos_control_one_rad(static_cast<int>(i), positions_rad[i]);
+    }
+}
+
+void DMDeviceCollection::rel_pos_control_one_rad(int i, double delta_rad) {
+    auto dm_device = get_dm_devices().at(i);
+    CANPacket cmd =
+        CanPacketEncoder::create_rel_pos_control_command_rad(dm_device->get_motor(), delta_rad);
+    send_command_to_device(dm_device, cmd);
+}
+
+void DMDeviceCollection::rel_pos_control_all_rad(const std::vector<double>& deltas_rad) {
+    for (size_t i = 0; i < deltas_rad.size(); i++) {
+        rel_pos_control_one_rad(static_cast<int>(i), deltas_rad[i]);
+    }
+}
+
+void DMDeviceCollection::shortest_home_one(int i) {
+    auto dm_device = get_dm_devices().at(i);
+    CANPacket cmd = CanPacketEncoder::create_shortest_home_command(dm_device->get_motor());
+    send_command_to_device(dm_device, cmd);
+}
+
+void DMDeviceCollection::shortest_home_all() {
+    for (auto dm_device : get_dm_devices()) {
+        CANPacket cmd = CanPacketEncoder::create_shortest_home_command(dm_device->get_motor());
+        send_command_to_device(dm_device, cmd);
+    }
+}
+
+void DMDeviceCollection::query_mit_limits_one(int i) {
+    auto dm_device = get_dm_devices().at(i);
+    CANPacket cmd = CanPacketEncoder::create_query_mit_limits_command(dm_device->get_motor());
+    send_command_to_device(dm_device, cmd);
+}
+
+void DMDeviceCollection::query_mit_limits_all() {
+    for (auto dm_device : get_dm_devices()) {
+        CANPacket cmd = CanPacketEncoder::create_query_mit_limits_command(dm_device->get_motor());
+        send_command_to_device(dm_device, cmd);
+    }
+}
+
+void DMDeviceCollection::set_mit_limits_one(int i, double pos_max_rad, double vel_max_rad_s,
+                                           double t_max_nm) {
+    auto dm_device = get_dm_devices().at(i);
+    CANPacket cmd = CanPacketEncoder::create_set_mit_limits_command(dm_device->get_motor(),
+                                                                    pos_max_rad, vel_max_rad_s,
+                                                                    t_max_nm);
+    send_command_to_device(dm_device, cmd);
+}
+
+void DMDeviceCollection::set_mit_limits_all(double pos_max_rad, double vel_max_rad_s,
+                                           double t_max_nm) {
+    for (auto dm_device : get_dm_devices()) {
+        CANPacket cmd = CanPacketEncoder::create_set_mit_limits_command(dm_device->get_motor(),
+                                                                        pos_max_rad, vel_max_rad_s,
+                                                                        t_max_nm);
+        send_command_to_device(dm_device, cmd);
     }
 }
 
