@@ -25,10 +25,10 @@
 
 namespace openarm::oy_motor {
 
-class DMDeviceCollection {
+class OYDeviceCollection {
 public:
-    DMDeviceCollection(canbus::CANSocket& can_socket);
-    virtual ~DMDeviceCollection() = default;
+    OYDeviceCollection(canbus::CANSocket& can_socket);
+    virtual ~OYDeviceCollection() = default;
 
     // Common motor operations
     void enable_all();
@@ -96,7 +96,7 @@ protected:
     std::unique_ptr<canbus::CANDeviceCollection> device_collection_;
 
     // Helper methods for subclasses
-    void send_command_to_device(std::shared_ptr<DMCANDevice> dm_device, const CANPacket& packet);
-    std::vector<std::shared_ptr<DMCANDevice>> get_dm_devices() const;
+    void send_command_to_device(std::shared_ptr<OYCANDevice> oy_device, const CANPacket& packet);
+    std::vector<std::shared_ptr<OYCANDevice>> get_oy_devices() const;
 };
 }  // namespace openarm::oy_motor

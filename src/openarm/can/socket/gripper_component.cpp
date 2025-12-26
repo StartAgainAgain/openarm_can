@@ -17,18 +17,19 @@
 
 #include <iostream>
 #include <openarm/can/socket/gripper_component.hpp>
+#include <openarm/oy_motor/oy_motor_device.hpp>
 
 namespace openarm::can::socket {
 
 GripperComponent::GripperComponent(canbus::CANSocket& can_socket)
-    : DMDeviceCollection(can_socket) {}
+    : OYDeviceCollection(can_socket) {}
 
-void GripperComponent::init_motor_device(damiao_motor::MotorType motor_type, uint32_t send_can_id,
+void GripperComponent::init_motor_device(oy_motor::MotorType motor_type, uint32_t send_can_id,
                                          uint32_t recv_can_id, bool use_fd) {
     // Create the motor
-    motor_ = std::make_unique<damiao_motor::Motor>(motor_type, send_can_id, recv_can_id);
+    motor_ = std::make_unique<oy_motor::Motor>(motor_type, send_can_id, recv_can_id);
     // Create the device with a reference to the motor
-    motor_device_ = std::make_shared<damiao_motor::DMCANDevice>(*motor_, CAN_SFF_MASK, use_fd);
+    motor_device_ = std::make_shared<oy_motor::OYCANDevice>(*motor_, CAN_SFF_MASK, use_fd);
     get_device_collection().add_device(motor_device_);
 }
 
@@ -43,6 +44,6 @@ void GripperComponent::set_position(double gripper_position, double kp, double k
 
     // MIT control to desired position (zero velocity and torque)
     mit_control_one(
-        0, damiao_motor::MITParam{kp, kd, gripper_to_motor_position(gripper_position), 0.0, 0.0});
+        0, oy_motor::MITParam{kp, kd, gripper_to_motor_position(gripper_position), 0.0, 0.0});
 }
 }  // namespace openarm::can::socket

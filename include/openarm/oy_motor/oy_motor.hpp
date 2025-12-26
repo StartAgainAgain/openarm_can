@@ -22,7 +22,7 @@
 
 namespace openarm::oy_motor {
 class Motor {
-    friend class DMCANDevice;  // Allow MotorDeviceCan to access protected
+    friend class OYCANDevice;  // Allow MotorDeviceCan to access protected
                                // members
     friend class DMControl;
     friend class CanPacketDecoder;

@@ -25,7 +25,8 @@
 #include <cmath>
 #include <iostream>
 #include <openarm/can/socket/openarm.hpp>
-#include <openarm/damiao_motor/dm_motor_constants.hpp>
+#include <openarm/oy_motor/oy_motor_constants.hpp>
+#include <openarm/oy_motor/oy_motor_device.hpp>
 #include <thread>
 #include <vector>
 
@@ -113,28 +114,28 @@ int main(int argc, char* argv[]) {
     openarm::can::socket::OpenArm openarm(can_if, use_fd);
 
     // Initialize arm motors
-    std::vector<openarm::damiao_motor::MotorType> motor_types = {
-        openarm::damiao_motor::MotorType::DM8009, openarm::damiao_motor::MotorType::DM8009,
-        openarm::damiao_motor::MotorType::DM4340, openarm::damiao_motor::MotorType::DM4340,
-        openarm::damiao_motor::MotorType::DM4310, openarm::damiao_motor::MotorType::DM4310,
-        openarm::damiao_motor::MotorType::DM4310};
+    std::vector<openarm::oy_motor::MotorType> motor_types = {
+        openarm::oy_motor::MotorType::DM8009, openarm::oy_motor::MotorType::DM8009,
+        openarm::oy_motor::MotorType::DM4340, openarm::oy_motor::MotorType::DM4340,
+        openarm::oy_motor::MotorType::DM4310, openarm::oy_motor::MotorType::DM4310,
+        openarm::oy_motor::MotorType::DM4310};
     std::vector<uint32_t> send_can_ids = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
     std::vector<uint32_t> recv_can_ids = {0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17};
     openarm.init_arm_motors(motor_types, send_can_ids, recv_can_ids);
 
     // Initialize gripper
     std::cout << "Initializing gripper..." << std::endl;
-    openarm.init_gripper_motor(openarm::damiao_motor::MotorType::DM4310, 0x08, 0x18);
+    openarm.init_gripper_motor(openarm::oy_motor::MotorType::DM4310, 0x08, 0x18);
 
-    openarm.set_callback_mode_all(openarm::damiao_motor::CallbackMode::PARAM);
+    openarm.set_callback_mode_all(openarm::oy_motor::CallbackMode::PARAM);
 
     std::cout << "Reading motor parameters ..." << std::endl;
-    openarm.query_param_all((int)openarm::damiao_motor::RID::MST_ID);
+    openarm.query_param_all((int)openarm::oy_motor::RID::MST_ID);
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     openarm.recv_all();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-    openarm.query_param_all((int)openarm::damiao_motor::RID::can_br);
+    openarm.query_param_all((int)openarm::oy_motor::RID::can_br);
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     openarm.recv_all();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -147,8 +148,8 @@ int main(int argc, char* argv[]) {
 
     for (size_t i = 0; i < arm_motors.size(); ++i) {
         const auto& motor = arm_motors[i];
-        double mst = motor.get_param((int)openarm::damiao_motor::RID::MST_ID);
-        double br = motor.get_param((int)openarm::damiao_motor::RID::can_br);
+        double mst = motor.get_param((int)openarm::oy_motor::RID::MST_ID);
+        double br = motor.get_param((int)openarm::oy_motor::RID::can_br);
 
         if (mst < 0 || br < 0 || !std::isfinite(mst) || !std::isfinite(br)) {
             std::cout << "[arm#" << i << "] id=0x" << std::hex << recv_can_ids[i] << std::dec
@@ -163,8 +164,8 @@ int main(int argc, char* argv[]) {
 
     for (size_t i = 0; i < gripper_motors.size(); ++i) {
         const auto& gr = gripper_motors[i];
-        double mst = gr.get_param((int)openarm::damiao_motor::RID::MST_ID);
-        double br = gr.get_param((int)openarm::damiao_motor::RID::can_br);
+        double mst = gr.get_param((int)openarm::oy_motor::RID::MST_ID);
+        double br = gr.get_param((int)openarm::oy_motor::RID::can_br);
 
         if (mst < 0 || br < 0 || !std::isfinite(mst) || !std::isfinite(br)) {
             std::cout << "[gripper] id=0x18 -> NG (no response)\n";

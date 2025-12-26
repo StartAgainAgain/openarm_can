@@ -27,9 +27,9 @@ enum CallbackMode {
     IGNORE
 };
 
-class DMCANDevice : public canbus::CANDevice {
+class OYCANDevice : public canbus::CANDevice {
 public:
-    explicit DMCANDevice(Motor& motor, canid_t recv_can_mask, bool use_fd);
+    explicit OYCANDevice(Motor& motor, canid_t recv_can_mask, bool use_fd);
     void callback(const can_frame& frame);
     void callback(const canfd_frame& frame);
 

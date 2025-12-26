@@ -28,7 +28,7 @@ OpenArm::OpenArm(const std::string& can_interface, bool enable_fd)
     gripper_ = std::make_unique<GripperComponent>(*can_socket_);
 }
 
-void OpenArm::init_arm_motors(const std::vector<damiao_motor::MotorType>& motor_types,
+void OpenArm::init_arm_motors(const std::vector<oy_motor::MotorType>& motor_types,
                               const std::vector<uint32_t>& send_can_ids,
                               const std::vector<uint32_t>& recv_can_ids) {
     if (motor_types.size() != send_can_ids.size() || motor_types.size() != recv_can_ids.size()) {
@@ -39,48 +39,48 @@ void OpenArm::init_arm_motors(const std::vector<damiao_motor::MotorType>& motor_
             std::to_string(recv_can_ids.size()));
     }
     arm_->init_motor_devices(motor_types, send_can_ids, recv_can_ids, enable_fd_);
-    register_dm_device_collection(*arm_);
+    register_oy_device_collection(*arm_);
 }
 
-void OpenArm::init_gripper_motor(damiao_motor::MotorType motor_type, uint32_t send_can_id,
+void OpenArm::init_gripper_motor(oy_motor::MotorType motor_type, uint32_t send_can_id,
                                  uint32_t recv_can_id) {
     gripper_->init_motor_device(motor_type, send_can_id, recv_can_id, enable_fd_);
-    register_dm_device_collection(*gripper_);
+    register_oy_device_collection(*gripper_);
 }
 
-void OpenArm::register_dm_device_collection(damiao_motor::DMDeviceCollection& device_collection) {
+void OpenArm::register_oy_device_collection(oy_motor::OYDeviceCollection& device_collection) {
     for (const auto& [id, device] : device_collection.get_device_collection().get_devices()) {
         master_can_device_collection_->add_device(device);
     }
-    sub_dm_device_collections_.push_back(&device_collection);
+    sub_oy_device_collections_.push_back(&device_collection);
 }
 
 void OpenArm::enable_all() {
-    for (damiao_motor::DMDeviceCollection* device_collection : sub_dm_device_collections_) {
+    for (oy_motor::OYDeviceCollection* device_collection : sub_oy_device_collections_) {
         device_collection->enable_all();
     }
 }
 
 void OpenArm::set_zero_all() {
-    for (damiao_motor::DMDeviceCollection* device_collection : sub_dm_device_collections_) {
+    for (oy_motor::OYDeviceCollection* device_collection : sub_oy_device_collections_) {
         device_collection->set_zero_all();
     }
 }
 
 void OpenArm::refresh_all() {
-    for (damiao_motor::DMDeviceCollection* device_collection : sub_dm_device_collections_) {
+    for (oy_motor::OYDeviceCollection* device_collection : sub_oy_device_collections_) {
         device_collection->refresh_all();
     }
 }
 
 void OpenArm::refresh_one(int i) {
-    for (damiao_motor::DMDeviceCollection* device_collection : sub_dm_device_collections_) {
+    for (oy_motor::OYDeviceCollection* device_collection : sub_oy_device_collections_) {
         device_collection->refresh_one(i);
     }
 }
 
 void OpenArm::disable_all() {
-    for (damiao_motor::DMDeviceCollection* device_collection : sub_dm_device_collections_) {
+    for (oy_motor::OYDeviceCollection* device_collection : sub_oy_device_collections_) {
         device_collection->disable_all();
     }
 }
@@ -109,13 +109,13 @@ void OpenArm::recv_all(int timeout_us) {
 }
 
 void OpenArm::query_param_all(int RID) {
-    for (damiao_motor::DMDeviceCollection* device_collection : sub_dm_device_collections_) {
+    for (oy_motor::OYDeviceCollection* device_collection : sub_oy_device_collections_) {
         device_collection->query_param_all(RID);
     }
 }
 
-void OpenArm::set_callback_mode_all(damiao_motor::CallbackMode callback_mode) {
-    for (damiao_motor::DMDeviceCollection* device_collection : sub_dm_device_collections_) {
+void OpenArm::set_callback_mode_all(oy_motor::CallbackMode callback_mode) {
+    for (oy_motor::OYDeviceCollection* device_collection : sub_oy_device_collections_) {
         device_collection->set_callback_mode_all(callback_mode);
     }
 }

@@ -32,11 +32,11 @@ public:
     bool can_fd_enabled() const noexcept { return enable_fd_; }
 
     // Component initialization
-    void init_arm_motors(const std::vector<damiao_motor::MotorType>& motor_types,
+    void init_arm_motors(const std::vector<oy_motor::MotorType>& motor_types,
                          const std::vector<uint32_t>& send_can_ids,
                          const std::vector<uint32_t>& recv_can_ids);
 
-    void init_gripper_motor(damiao_motor::MotorType motor_type, uint32_t send_can_id,
+    void init_gripper_motor(oy_motor::MotorType motor_type, uint32_t send_can_id,
                             uint32_t recv_can_id);
 
     // Component access
@@ -46,7 +46,7 @@ public:
         return *master_can_device_collection_;
     }
 
-    // Damiao Motor operations (works only on sub_dm_device_collections_)
+    // Damiao Motor operations (works only on sub_oy_device_collections_)
     void enable_all();
     void disable_all();
     void set_zero_all();
@@ -56,7 +56,7 @@ public:
     // The timeout for reading from socket, set to timeout_us.
     // Tuning this value may improve the performance but should be done with caution.
     void recv_all(int timeout_us = 500);
-    void set_callback_mode_all(damiao_motor::CallbackMode callback_mode);
+    void set_callback_mode_all(oy_motor::CallbackMode callback_mode);
     void query_param_all(int RID);
 
 private:
@@ -66,8 +66,8 @@ private:
     std::unique_ptr<ArmComponent> arm_;
     std::unique_ptr<GripperComponent> gripper_;
     std::unique_ptr<canbus::CANDeviceCollection> master_can_device_collection_;
-    std::vector<damiao_motor::DMDeviceCollection*> sub_dm_device_collections_;
-    void register_dm_device_collection(damiao_motor::DMDeviceCollection& device_collection);
+    std::vector<oy_motor::OYDeviceCollection*> sub_oy_device_collections_;
+    void register_oy_device_collection(oy_motor::OYDeviceCollection& device_collection);
 };
 
 }  // namespace openarm::can::socket

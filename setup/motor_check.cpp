@@ -15,7 +15,9 @@
 #include <chrono>
 #include <iostream>
 #include <openarm/can/socket/openarm.hpp>
-#include <openarm/damiao_motor/dm_motor_constants.hpp>
+#include <openarm/oy_motor/oy_motor_constants.hpp>
+#include <openarm/oy_motor/oy_motor_device.hpp>
+#include <openarm/oy_motor/oy_motor.hpp>
 #include <thread>
 
 namespace {
@@ -32,7 +34,7 @@ void print_usage(const char* program_name) {
     std::cout << "Example: " << program_name << " 1 17 can1 -fd" << std::endl;
 }
 
-void print_motor_status(const openarm::damiao_motor::Motor& motor) {
+void print_motor_status(const openarm::oy_motor::Motor& motor) {
     std::cout << "Motor ID: " << motor.get_send_can_id() << std::endl;
     std::cout << "  Position: " << motor.get_position() << " rad" << std::endl;
     std::cout << "  Velocity: " << motor.get_velocity() << " rad/s" << std::endl;
@@ -106,25 +108,25 @@ int main(int argc, char* argv[]) {
 
         // Initialize single motor
         std::cout << "Initializing motor..." << std::endl;
-        openarm.init_arm_motors({openarm::damiao_motor::MotorType::DM4310}, {send_can_id},
+        openarm.init_arm_motors({openarm::oy_motor::MotorType::DM4310}, {send_can_id},
                                 {recv_can_id});
 
         // Set callback mode to param for initial parameter reading
-        openarm.set_callback_mode_all(openarm::damiao_motor::CallbackMode::PARAM);
+        openarm.set_callback_mode_all(openarm::oy_motor::CallbackMode::PARAM);
 
         // Query motor parameters (Master ID, Baudrate, and Control Mode)
         std::cout << "Reading motor parameters..." << std::endl;
-        openarm.query_param_all(static_cast<int>(openarm::damiao_motor::RID::MST_ID));
+        openarm.query_param_all(static_cast<int>(openarm::oy_motor::RID::MST_ID));
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         openarm.recv_all();
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-        openarm.query_param_all(static_cast<int>(openarm::damiao_motor::RID::can_br));
+        openarm.query_param_all(static_cast<int>(openarm::oy_motor::RID::can_br));
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         openarm.recv_all();
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-        openarm.query_param_all(static_cast<int>(openarm::damiao_motor::RID::CTRL_MODE));
+        openarm.query_param_all(static_cast<int>(openarm::oy_motor::RID::CTRL_MODE));
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         openarm.recv_all();
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -134,11 +136,11 @@ int main(int argc, char* argv[]) {
         if (!motors.empty()) {
             const auto& motor = motors[0];
             double queried_mst_id =
-                motor.get_param(static_cast<int>(openarm::damiao_motor::RID::MST_ID));
+                motor.get_param(static_cast<int>(openarm::oy_motor::RID::MST_ID));
             double queried_baudrate =
-                motor.get_param(static_cast<int>(openarm::damiao_motor::RID::can_br));
+                motor.get_param(static_cast<int>(openarm::oy_motor::RID::can_br));
             double queried_control_mode =
-                motor.get_param(static_cast<int>(openarm::damiao_motor::RID::CTRL_MODE));
+                motor.get_param(static_cast<int>(openarm::oy_motor::RID::CTRL_MODE));
 
             std::cout << "\n=== Motor Parameters ===" << std::endl;
             std::cout << "Send CAN ID: " << motor.get_send_can_id() << std::endl;
@@ -146,7 +148,7 @@ int main(int argc, char* argv[]) {
             std::cout << "Queried Baudrate (1-9): " << queried_baudrate << std::endl;
             std::cout << "Queried Control Mode (1: MIT, 2: POS_VEL, 3: VEL, 4: TORQUE_POS): "
                       << queried_control_mode << std::endl;
-            if (queried_control_mode != static_cast<int>(openarm::damiao_motor::ControlMode::MIT)) {
+            if (queried_control_mode != static_cast<int>(openarm::oy_motor::ControlMode::MIT)) {
                 std::cout << "Warning: Queried Control Mode (" << queried_control_mode
                           << ") is not MIT. Currently not supported." << std::endl;
             }
@@ -162,7 +164,7 @@ int main(int argc, char* argv[]) {
         }
 
         // Switch to state callback mode for motor status updates
-        openarm.set_callback_mode_all(openarm::damiao_motor::CallbackMode::STATE);
+        openarm.set_callback_mode_all(openarm::oy_motor::CallbackMode::STATE);
 
         // Enable the motor
         std::cout << "\n=== Enabling Motor ===" << std::endl;

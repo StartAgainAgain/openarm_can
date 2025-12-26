@@ -18,27 +18,27 @@
 #include <cmath>
 #include <memory>
 
-#include "../../damiao_motor/dm_motor.hpp"
-#include "../../damiao_motor/dm_motor_device_collection.hpp"
+#include "../../oy_motor/oy_motor.hpp"
+#include "../../oy_motor/oy_motor_device_collection.hpp"
 
 namespace openarm::can::socket {
 
-class GripperComponent : public damiao_motor::DMDeviceCollection {
+class GripperComponent : public oy_motor::OYDeviceCollection {
 public:
     GripperComponent(canbus::CANSocket& can_socket);
     ~GripperComponent() = default;
 
-    void init_motor_device(damiao_motor::MotorType motor_type, uint32_t send_can_id,
+    void init_motor_device(oy_motor::MotorType motor_type, uint32_t send_can_id,
                            uint32_t recv_can_id, bool use_fd);
 
     // Gripper-specific controls
     void open(double kp = 50.0, double kd = 1.0);
     void close(double kp = 50.0, double kd = 1.0);
-    damiao_motor::Motor* get_motor() const { return motor_.get(); }
+    oy_motor::Motor* get_motor() const { return motor_.get(); }
 
 private:
-    std::unique_ptr<damiao_motor::Motor> motor_;
-    std::shared_ptr<damiao_motor::DMCANDevice> motor_device_;
+    std::unique_ptr<oy_motor::Motor> motor_;
+    std::shared_ptr<oy_motor::OYCANDevice> motor_device_;
 
     void set_position(double position, double kp = 50.0, double kd = 1.0);
 

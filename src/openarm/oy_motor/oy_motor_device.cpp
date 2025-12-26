@@ -21,20 +21,20 @@
 
 namespace openarm::oy_motor {
 
-DMCANDevice::DMCANDevice(Motor& motor, canid_t recv_can_mask, bool use_fd)
+OYCANDevice::OYCANDevice(Motor& motor, canid_t recv_can_mask, bool use_fd)
     : canbus::CANDevice(motor.get_send_can_id(), motor.get_recv_can_id(), recv_can_mask, use_fd),
       motor_(motor),
       callback_mode_(CallbackMode::STATE),
       use_fd_(use_fd) {}
 
-std::vector<uint8_t> DMCANDevice::get_data_from_frame(const can_frame& frame) {
+std::vector<uint8_t> OYCANDevice::get_data_from_frame(const can_frame& frame) {
     return std::vector<uint8_t>(frame.data, frame.data + frame.can_dlc);
 }
 
-std::vector<uint8_t> DMCANDevice::get_data_from_frame(const canfd_frame& frame) {
+std::vector<uint8_t> OYCANDevice::get_data_from_frame(const canfd_frame& frame) {
     return std::vector<uint8_t>(frame.data, frame.data + frame.len);
 }
-void DMCANDevice::callback(const can_frame& frame) {
+void OYCANDevice::callback(const can_frame& frame) {
     if (use_fd_) {
         std::cerr << "WARNING: WRONG CALLBACK FUNCTION" << std::endl;
         return;
@@ -101,7 +101,7 @@ void DMCANDevice::callback(const can_frame& frame) {
     }
 }
 
-void DMCANDevice::callback(const canfd_frame& frame) {
+void OYCANDevice::callback(const canfd_frame& frame) {
     if (not use_fd_) {
         std::cerr << "WARNING: CANFD MODE NOT ENABLED" << std::endl;
         return;
@@ -145,7 +145,7 @@ void DMCANDevice::callback(const canfd_frame& frame) {
     }
 }
 
-can_frame DMCANDevice::create_can_frame(canid_t send_can_id, std::vector<uint8_t> data) {
+can_frame OYCANDevice::create_can_frame(canid_t send_can_id, std::vector<uint8_t> data) {
     can_frame frame;
     std::memset(&frame, 0, sizeof(frame));
     frame.can_id = send_can_id;
@@ -154,7 +154,7 @@ can_frame DMCANDevice::create_can_frame(canid_t send_can_id, std::vector<uint8_t
     return frame;
 }
 
-canfd_frame DMCANDevice::create_canfd_frame(canid_t send_can_id, std::vector<uint8_t> data) {
+canfd_frame OYCANDevice::create_canfd_frame(canid_t send_can_id, std::vector<uint8_t> data) {
     canfd_frame frame;
     frame.can_id = send_can_id;
     frame.len = data.size();

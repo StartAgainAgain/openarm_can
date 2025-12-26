@@ -144,7 +144,18 @@ install(
            setup/openarm-can-zero-position-calibration
   DESTINATION ${CMAKE_INSTALL_BINDIR})
 
+
+  
 # Add tests
 if(BUILD_TESTING)
   # add_subdirectory(test)
 endif()
+
+# Uninstall target
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
+  @ONLY)
+add_custom_target(
+  uninstall
+  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
