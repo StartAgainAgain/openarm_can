@@ -43,6 +43,19 @@ void OYDeviceCollection::disable_all() {
     }
 }
 
+void OYDeviceCollection::reboot_one(int i) {
+    auto oy_device = get_oy_devices().at(i);
+    CANPacket reboot_packet = CanPacketEncoder::create_reboot_command(oy_device->get_motor());
+    send_command_to_device(oy_device, reboot_packet);
+}
+
+void OYDeviceCollection::reboot_all() {
+    for (auto oy_device : get_oy_devices()) {
+        CANPacket reboot_packet = CanPacketEncoder::create_reboot_command(oy_device->get_motor());
+        send_command_to_device(oy_device, reboot_packet);
+    }
+}
+
 void OYDeviceCollection::set_zero(int i) {
     auto oy_device = get_oy_devices().at(i);
     auto zero_packet = CanPacketEncoder::create_set_zero_command(oy_device->get_motor());

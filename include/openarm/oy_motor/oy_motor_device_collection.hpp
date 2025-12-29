@@ -33,6 +33,11 @@ public:
     // Common motor operations
     void enable_all();
     void disable_all();
+
+    void reboot_one(int i);
+    void reboot_all();
+
+
     void set_callback_mode_all(CallbackMode callback_mode);
 
     // Flash new zero position

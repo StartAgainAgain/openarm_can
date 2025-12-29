@@ -120,4 +120,18 @@ void OpenArm::set_callback_mode_all(oy_motor::CallbackMode callback_mode) {
     }
 }
 
+void OpenArm::reboot_all() {
+    for (oy_motor::OYDeviceCollection* device_collection : sub_oy_device_collections_) {
+        for (size_t i = 0; i < device_collection->get_motors().size(); ++i) {
+            reboot_one(static_cast<int>(i));
+        }
+    }
+}
+
+void OpenArm::reboot_one(int i) {
+    for (oy_motor::OYDeviceCollection* device_collection : sub_oy_device_collections_) {
+        device_collection->reboot_one(i);
+    }
+}
+
 }  // namespace openarm::can::socket

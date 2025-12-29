@@ -63,6 +63,7 @@ struct PosVelParam {
 
 class CanPacketEncoder {
 public:
+    static CANPacket create_reboot_command(const Motor& motor);
     static CANPacket create_enable_command(const Motor& motor);
     static CANPacket create_disable_command(const Motor& motor);
     static CANPacket create_set_zero_command(const Motor& motor);
@@ -97,6 +98,8 @@ private:
     static std::vector<uint8_t> pack_brake_control_data(uint8_t op);
     static std::vector<uint8_t> pack_mit_limits_set_data(double pos_max_rad, double vel_max_rad_s,
                                                          double t_max_nm);
+    static std::vector<uint8_t> pack_reboot_data();   
+                                                  
     static std::vector<uint8_t> pack_command_only(uint8_t cmd);
 
     static double limit_min_max(double x, double min, double max);

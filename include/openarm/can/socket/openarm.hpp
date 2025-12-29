@@ -59,6 +59,11 @@ public:
     void set_callback_mode_all(oy_motor::CallbackMode callback_mode);
     void query_param_all(int RID);
 
+    //added by ligx>>
+    void reboot_all();
+    void reboot_one(int i);
+    //added by ligx<<
+
 private:
     std::string can_interface_;
     bool enable_fd_;

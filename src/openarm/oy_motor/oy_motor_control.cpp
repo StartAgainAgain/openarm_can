@@ -30,6 +30,10 @@ constexpr int make_key(uint8_t cmd, uint8_t field) {
     return (static_cast<int>(cmd) << 8) | static_cast<int>(field);
 }
 }  // namespace
+CANPacket CanPacketEncoder::create_reboot_command(const Motor& motor) {
+    // 0x00: reboot command (DLC=8) per 自定义CAN通信协议_V3.07b0
+    return {motor.get_send_can_id(), pack_reboot_data()};
+}
 
 // Command creation methods (data content per 自定义CAN通信协议_V3.07b0)
 CANPacket CanPacketEncoder::create_enable_command(const Motor& motor) {
@@ -368,6 +372,10 @@ std::vector<uint8_t> CanPacketEncoder::pack_mit_limits_set_data(double pos_max_r
             static_cast<uint8_t>((t_0p01 >> 8) & 0xFF)};
 }
 
+std::vector<uint8_t> CanPacketEncoder::pack_reboot_data() {
+    // Protocol: [0]=0x00, [1..7]=FF 00 FF 00 FF 00 FF
+    return {0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF};
+}
 std::vector<uint8_t> CanPacketEncoder::pack_command_only(uint8_t cmd) { return {cmd}; }
 
 // Utility function implementations
