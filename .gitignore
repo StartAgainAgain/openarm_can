@@ -16,6 +16,7 @@
 /.vscode
 /build
 /CMakeFiles
+/.github
 /openarm-can-*.tar.gz
 /packages/apt/build.sh
 /packages/apt/build/
