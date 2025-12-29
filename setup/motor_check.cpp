@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
 
         // Initialize single motor
         std::cout << "Initializing motor..." << std::endl;
-        openarm.init_arm_motors({openarm::oy_motor::MotorType::DM4310}, {send_can_id},
+        openarm.init_arm_motors({openarm::oy_motor::MotorType::GIM8115_9p}, {send_can_id},
                                 {recv_can_id});
 
         // Set callback mode to param for initial parameter reading

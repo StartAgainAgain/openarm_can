@@ -115,17 +115,17 @@ int main(int argc, char* argv[]) {
 
     // Initialize arm motors
     std::vector<openarm::oy_motor::MotorType> motor_types = {
-        openarm::oy_motor::MotorType::DM8009, openarm::oy_motor::MotorType::DM8009,
-        openarm::oy_motor::MotorType::DM4340, openarm::oy_motor::MotorType::DM4340,
-        openarm::oy_motor::MotorType::DM4310, openarm::oy_motor::MotorType::DM4310,
-        openarm::oy_motor::MotorType::DM4310};
+        openarm::oy_motor::MotorType::GIM8115_9p, openarm::oy_motor::MotorType::GIM8115_9p,
+        openarm::oy_motor::MotorType::GIM4310_40, openarm::oy_motor::MotorType::GIM4310_40,
+        openarm::oy_motor::MotorType::GIM4315_8, openarm::oy_motor::MotorType::GIM4315_8,
+        openarm::oy_motor::MotorType::GIM4315_8};
     std::vector<uint32_t> send_can_ids = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
     std::vector<uint32_t> recv_can_ids = {0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17};
     openarm.init_arm_motors(motor_types, send_can_ids, recv_can_ids);
 
     // Initialize gripper
     std::cout << "Initializing gripper..." << std::endl;
-    openarm.init_gripper_motor(openarm::oy_motor::MotorType::DM4310, 0x08, 0x18);
+    openarm.init_gripper_motor(openarm::oy_motor::MotorType::GIM4315_8, 0x08, 0x18);
 
     openarm.set_callback_mode_all(openarm::oy_motor::CallbackMode::PARAM);
 

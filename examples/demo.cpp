@@ -29,18 +29,18 @@ int main() {
 
         // Initialize OpenArm with CAN interface and enable CAN-FD
         std::cout << "Initializing OpenArm CAN..." << std::endl;
-        openarm::can::socket::OpenArm openarm("can0", true);  // Use CAN-FD on can0 interface
+        openarm::can::socket::OpenArm openarm("can0", false;  // Use CAN-FD on can0 interface
 
         // Initialize arm motors
         std::vector<openarm::oy_motor::MotorType> motor_types = {
-            openarm::oy_motor::MotorType::DM4310, openarm::oy_motor::MotorType::DM4310};
+            openarm::oy_motor::MotorType::GIM8115_9p, openarm::oy_motor::MotorType::GIM8115_9p};
         std::vector<uint32_t> send_can_ids = {0x01, 0x02};
         std::vector<uint32_t> recv_can_ids = {0x11, 0x12};
         openarm.init_arm_motors(motor_types, send_can_ids, recv_can_ids);
 
         // Initialize gripper
         std::cout << "Initializing gripper..." << std::endl;
-        openarm.init_gripper_motor(openarm::oy_motor::MotorType::DM4310, 0x08, 0x18);
+        openarm.init_gripper_motor(openarm::oy_motor::MotorType::GIM4315_8, 0x08, 0x18);
 
         // Set callback mode to ignore and enable all motors
         openarm.set_callback_mode_all(openarm::oy_motor::CallbackMode::IGNORE);
