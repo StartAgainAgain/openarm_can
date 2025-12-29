@@ -189,6 +189,19 @@ std::vector<ParamResult> CanPacketDecoder::parse_motor_param_data(Motor& motor,
 
     const uint8_t cmd = data[0];
 
+    // 0xA0 response: [0]=0xA0, [1..2]=Boot ver(u16), [3..4]=App ver(u16), [5..6]=HW ver(u16), [7]=CAN proto ver(u8)
+    if (cmd == 0xA0 && data.size() >= 8) {
+        uint16_t boot_u16 = uint16_from_le(data, 1);
+        uint16_t app_u16 = uint16_from_le(data, 3);
+        uint16_t hw_u16 = uint16_from_le(data, 5);
+        uint8_t can_proto_u8 = data[7];
+        out.push_back({make_key(cmd, 1), static_cast<double>(boot_u16), true});
+        out.push_back({make_key(cmd, 2), static_cast<double>(app_u16), true});
+        out.push_back({make_key(cmd, 3), static_cast<double>(hw_u16), true});
+        out.push_back({make_key(cmd, 4), static_cast<double>(can_proto_u8), true});
+        return out;
+    }
+
     // 0xA1 / 0xC0 response: [0]=cmd, [1..4]=int32 (0.001A)
     if ((cmd == 0xA1 || cmd == 0xC0) && data.size() >= 5) {
         int32_t iq_mA = int32_from_le(data, 1);

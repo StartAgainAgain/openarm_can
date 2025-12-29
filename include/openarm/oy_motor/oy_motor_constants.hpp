@@ -77,6 +77,44 @@ enum class RID : uint8_t {
     COUNT = 82
 };
 
+// enum class CMDCODE : uint8_t {
+//     // System
+//     REBOOT = 0x00,           // reboot slave (no response)
+//     READ_VERSION = 0xA0,     // read Boot/App/HW/CAN-proto version
+//     READ_IQ = 0xA1,          // read Q-axis current
+//     READ_SPEED = 0xA2,       // read rotating speed
+//     READ_ANGLE = 0xA3,       // read single-turn + multi-turn angle
+//     READ_A4_STATE = 0xA4,    // read temperature + iq + speed + single-turn angle
+//     READ_AE_STATUS = 0xAE,   // read busV/busI/temp/mode/fault (may be unsolicited)
+//     CLEAR_FAULT = 0xAF,      // clear fault
+
+//     // Parameters
+//     READ_MOTOR_PARAMS = 0xB0,        // read pole pairs / torque constant / gear ratio
+//     SET_ZERO = 0xB1,                 // set current position as origin
+//     SET_POS_MODE_MAX_SPEED = 0xB2,   // set position-mode max speed (volatile)
+//     SET_MAX_IQ = 0xB3,               // set max Q-axis current (volatile)
+//     SET_IQ_SLOPE = 0xB4,             // set iq slope (volatile)
+//     SET_SPEED_ACCEL = 0xB5,          // set speed acceleration (volatile)
+//     POS_KP = 0xB6,                   // read/set position loop Kp (volatile)
+//     POS_KI = 0xB7,                   // read/set position loop Ki (volatile)
+//     SPEED_KP = 0xB8,                 // read/set speed loop Kp (volatile)
+//     SPEED_KI = 0xB9,                 // read/set speed loop Ki (volatile)
+
+//     // Control
+//     IQ_CONTROL = 0xC0,        // iq control
+//     SPEED_CONTROL = 0xC1,     // speed control
+//     ABS_POS_CONTROL = 0xC2,   // absolute position control
+//     REL_POS_CONTROL = 0xC3,   // relative position control
+//     SHORTEST_HOME = 0xC4,     // shortest distance to home
+//     BRAKE_CONTROL = 0xCE,     // brake output control
+//     DISABLE_OUTPUT = 0xCF,    // disable motor output (free state)
+
+//     // MIT-mode
+//     MIT_LIMITS = 0xF0,        // read/set Pos_Max/Vel_Max/T_Max
+//     MIT_STATE = 0xF1,         // read MIT state
+//     // NOTE: MIT control command has NO command code byte; it uses StdID Bit[10]=1 (OR with 0x400).
+// };
+
 // Limit parameters structure for different motor types
 struct LimitParam {
     double pMax;  // Position limit (rad)
