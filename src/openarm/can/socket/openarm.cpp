@@ -132,4 +132,10 @@ void OpenArm::reboot_one(int i) {
     }
 }
 
+void OpenArm::read_boot_app_hw_can_version() {
+    for (oy_motor::OYDeviceCollection* device_collection : sub_oy_device_collections_) {
+        int RID = static_cast<int>(oy_motor::CMDCODE::READ_VERSION);
+        device_collection->query_param_all(RID);
+    }
+}
 }  // namespace openarm::can::socket

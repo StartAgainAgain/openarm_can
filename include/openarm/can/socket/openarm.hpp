@@ -62,6 +62,7 @@ public:
     //added by ligx>>
     void reboot_all();
     void reboot_one(int i);
+    void read_boot_app_hw_can_version();
     //added by ligx<<
 
 private:

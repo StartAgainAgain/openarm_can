@@ -24,7 +24,7 @@ namespace openarm::oy_motor {
 class Motor {
     friend class OYCANDevice;  // Allow MotorDeviceCan to access protected
                                // members
-    friend class DMControl;
+    friend class OYControl;
     friend class CanPacketDecoder;
 
 public:
@@ -126,5 +126,19 @@ protected:
         pole_pairs_ = npp;
         pole_pairs_valid_ = true;
     }
+
+protected:
+    uint16_t boot_version_{0};
+    uint16_t app_version_{0};
+    uint16_t hw_version_{0};
+    uint8_t can_protocol_version_{0};
+    void update_versions(uint16_t boot, uint16_t app, uint16_t hw, uint8_t can_proto) {
+        boot_version_ = boot;
+        app_version_ = app;
+        hw_version_ = hw;
+        can_protocol_version_ = can_proto;
+    }
+
+
 };
 }  // namespace openarm::oy_motor

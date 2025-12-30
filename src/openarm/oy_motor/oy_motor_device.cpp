@@ -44,29 +44,27 @@ void OYCANDevice::callback(const can_frame& frame) {
 
     // Protocol: fault/status (0xAE) may be reported periodically without request.
     // Treat it as PARAM-like data regardless of current callback mode.
-    if (!data.empty() && data[0] == 0xAE) {
-        auto results = CanPacketDecoder::parse_motor_param_data(motor_, data);
-        for (const auto& r : results) {
-            if (r.valid) motor_.set_temp_param(r.rid, r.value);
-        }
-        return;
-    }
+    // if (!data.empty() && data[0] == 0xAE) {
+    //     auto results = CanPacketDecoder::parse_motor_param_data(motor_, data);
+    //     for (const auto& r : results) {
+    //         if (r.valid) motor_.set_temp_param(r.rid, r.value);
+    //     }
+    //     return;
+    // }
 
     // Unsolicited fault/status reporting (0xAE) can arrive at any time.
-    if (!data.empty() && data[0] == 0xAE) {
-        auto results = CanPacketDecoder::parse_motor_param_data(motor_, data);
-        for (const auto& r : results) {
-            if (r.valid) motor_.set_temp_param(r.rid, r.value);
-        }
-        return;
-    }
+    // if (!data.empty() && data[0] == 0xAE) {
+    //     auto results = CanPacketDecoder::parse_motor_param_data(motor_, data);
+    //     for (const auto& r : results) {
+    //         if (r.valid) motor_.set_temp_param(r.rid, r.value);
+    //     }
+    //     return;
+    // }
 
     switch (callback_mode_) {
         case STATE:
             if (frame.can_id != motor_.get_recv_can_id() || data.empty()) break;
-
-            // 0xF1 response: MIT state (DLC=7)
-            if (data[0] == 0xF1 && frame.can_dlc >= 7) {
+            if (data[0] == static_cast<uint8_t>(CMDCODE::READ_VERSION) && frame.can_dlc == 8) {
                 StateResult result = CanPacketDecoder::parse_motor_state_data(motor_, data);
                 if (result.valid) {
                     motor_.update_state(result.position, result.velocity, result.torque,
@@ -77,21 +75,21 @@ void OYCANDevice::callback(const can_frame& frame) {
                 break;
             }
 
-            // 0xA4 response: temperature/current/speed/angle (DLC=8)
-            if (data[0] == 0xA4 && frame.can_dlc >= 8) {
-                StateResult result = CanPacketDecoder::parse_a4_state_data(motor_, data);
-                if (result.valid) {
-                    motor_.update_state(result.position, result.velocity, result.torque,
-                                        result.t_mos, result.t_rotor);
-                }
-                break;
-            }
+            // // 0xA4 response: temperature/current/speed/angle (DLC=8)
+            // if (data[0] == 0xA4 && frame.can_dlc >= 8) {
+            //     StateResult result = CanPacketDecoder::parse_a4_state_data(motor_, data);
+            //     if (result.valid) {
+            //         motor_.update_state(result.position, result.velocity, result.torque,
+            //                             result.t_mos, result.t_rotor);
+            //     }
+            //     break;
+            // }
             break;
         case PARAM: {
-            auto results = CanPacketDecoder::parse_motor_param_data(motor_, data);
-            for (const auto& r : results) {
-                if (r.valid) motor_.set_temp_param(r.rid, r.value);
-            }
+            // auto results = CanPacketDecoder::parse_motor_param_data(motor_, data);
+            // for (const auto& r : results) {
+            //     if (r.valid) motor_.set_temp_param(r.rid, r.value);
+            // }
             break;
         }
         case IGNORE:
